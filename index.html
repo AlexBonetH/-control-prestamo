@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
@@ -7,91 +8,354 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Control Préstamo">
 <title>Control de Préstamo</title>
+
 <style>
-*{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#f5f6f8;color:#1f2937}
-.app{max-width:520px;margin:auto;padding:22px 16px 36px}.title{font-size:27px;font-weight:800;margin-bottom:4px}.subtitle{color:#6b7280;margin-bottom:20px}
-.card{background:white;border-radius:18px;padding:18px;margin-bottom:14px;box-shadow:0 3px 14px rgba(0,0,0,.06)}
-.row{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid #eee}.row:last-child{border-bottom:0}
-.label{color:#6b7280}.value{font-weight:700}.saldo{font-size:24px}
-input{width:100%;padding:13px;border:1px solid #d1d5db;border-radius:12px;font-size:16px;margin:7px 0 12px}
-button{width:100%;border:0;border-radius:12px;padding:14px;font-size:16px;font-weight:700;background:#111827;color:white}
-table{width:100%;border-collapse:collapse;font-size:13px}th,td{text-align:left;padding:9px 4px;border-bottom:1px solid #eee}th{color:#6b7280}
-.ok{background:#ecfdf5;color:#047857;padding:12px;border-radius:12px;font-weight:700}.warn{background:#fff7ed;color:#c2410c;padding:12px;border-radius:12px;font-weight:700}
-.small{font-size:13px;color:#6b7280}
+*{box-sizing:border-box}
+
+body{
+margin:0;
+font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+background:#f5f6f8;
+color:#1f2937
+}
+
+.app{
+max-width:520px;
+margin:auto;
+padding:22px 16px 36px
+}
+
+.title{
+font-size:27px;
+font-weight:800;
+margin-bottom:4px
+}
+
+.subtitle{
+color:#6b7280;
+margin-bottom:20px
+}
+
+.card{
+background:white;
+border-radius:18px;
+padding:18px;
+margin-bottom:14px;
+box-shadow:0 3px 14px rgba(0,0,0,.06)
+}
+
+.row{
+display:flex;
+justify-content:space-between;
+gap:12px;
+padding:10px 0;
+border-bottom:1px solid #eee
+}
+
+.row:last-child{
+border-bottom:0
+}
+
+.label{
+color:#6b7280
+}
+
+.value{
+font-weight:700
+}
+
+.saldo{
+font-size:24px
+}
+
+input{
+width:100%;
+padding:13px;
+border:1px solid #d1d5db;
+border-radius:12px;
+font-size:16px;
+margin:7px 0 12px
+}
+
+button{
+width:100%;
+border:0;
+border-radius:12px;
+padding:14px;
+font-size:16px;
+font-weight:700;
+background:#111827;
+color:white
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+font-size:13px
+}
+
+th,td{
+text-align:left;
+padding:9px 4px;
+border-bottom:1px solid #eee
+}
+
+th{
+color:#6b7280
+}
+
+.ok{
+background:#ecfdf5;
+color:#047857;
+padding:12px;
+border-radius:12px;
+font-weight:700
+}
+
+.warn{
+background:#fff7ed;
+color:#c2410c;
+padding:12px;
+border-radius:12px;
+font-weight:700
+}
+
+.small{
+font-size:13px;
+color:#6b7280
+}
+
+.delete{
+width:auto;
+padding:7px 10px;
+font-size:13px;
+background:#dc2626
+}
 </style>
+
 </head>
+
 <body>
+
 <div class="app">
-  <div class="title">📌 Control de Préstamo</div>
-  <div class="subtitle">Registro personal de abonos</div>
 
-  <div class="card">
-    <div class="row"><span class="label">💰 Capital prestado</span><span class="value">$2.000.000</span></div>
-    <div class="row"><span class="label">📈 Interés acordado</span><span class="value">$400.000</span></div>
-    <div class="row"><span class="label">🧾 Deuda total</span><span class="value">$2.400.000</span></div>
-    <div class="row"><span class="label">📊 Total abonado</span><span class="value" id="total">$0</span></div>
-    <div class="row"><span class="label">💵 Saldo pendiente</span><span class="value saldo" id="saldo">$2.400.000</span></div>
-    <div id="estado"></div>
-  </div>
+<div class="title">📌 Control de Préstamo</div>
 
-  <div class="card">
-    <h3>➕ Registrar abono</h3>
-    <label class="small">Fecha</label>
-    <input id="fecha" type="date">
-    <label class="small">Valor del abono</label>
-    <input id="valor" type="number" inputmode="numeric" min="1" placeholder="Ej. 100000">
-    <button onclick="registrar()">Registrar abono</button>
-  </div>
+<div class="subtitle">Registro personal de abonos</div>
 
-  <div class="card">
-    <h3>📋 Historial</h3>
-    <div id="tabla"></div>
-  </div>
+<div class="card">
+
+<div class="row">
+<span class="label">💰 Capital prestado</span>
+<span class="value">$2.000.000</span>
+</div>
+
+<div class="row">
+<span class="label">📈 Interés acordado</span>
+<span class="value">$400.000</span>
+</div>
+
+<div class="row">
+<span class="label">🧾 Deuda total</span>
+<span class="value">$2.400.000</span>
+</div>
+
+<div class="row">
+<span class="label">📊 Total abonado</span>
+<span class="value" id="total">$0</span>
+</div>
+
+<div class="row">
+<span class="label">💵 Saldo pendiente</span>
+<span class="value saldo" id="saldo">$2.400.000</span>
+</div>
+
+<div id="estado"></div>
+
+</div>
+
+<div class="card">
+
+<h3>➕ Registrar abono</h3>
+
+<label class="small">Fecha</label>
+
+<input id="fecha" type="date">
+
+<label class="small">Valor del abono</label>
+
+<input id="valor" type="number" inputmode="numeric" min="1" placeholder="Ej. 100000">
+
+<button onclick="registrar()">Registrar abono</button>
+
+</div>
+
+<div class="card">
+
+<h3>📋 Historial</h3>
+
+<div id="tabla"></div>
+
+</div>
+
 </div>
 
 <script>
+
 const DEUDA=2400000;
+
 let abonos=JSON.parse(localStorage.getItem("abonosPrestamo")||"[]");
 
-function money(n){return "$"+Math.round(n).toLocaleString("es-CO")}
+function money(n){
+return "$"+Math.round(n).toLocaleString("es-CO")
+}
+
 function formatDate(s){
-  const [y,m,d]=s.split("-");
-  return `${d}/${m}/${y}`;
+
+const [y,m,d]=s.split("-");
+
+return `${d}/${m}/${y}`;
+
 }
+
 function render(){
-  const total=abonos.reduce((s,a)=>s+a.valor,0);
-  const saldo=DEUDA-total;
-  document.getElementById("total").textContent=money(total);
-  document.getElementById("saldo").textContent=money(Math.max(saldo,0));
-  const estado=document.getElementById("estado");
-  if(saldo===0) estado.innerHTML='<div class="ok">✅ DEUDA CANCELADA<br>Saldo pendiente: $0</div>';
-  else if(saldo<0) estado.innerHTML=`<div class="warn">⚠️ Hay un excedente de ${money(-saldo)}</div>`;
-  else estado.innerHTML="";
-  let acum=0;
-  if(!abonos.length){document.getElementById("tabla").innerHTML='<div class="small">Aún no hay abonos registrados.</div>';return;}
-  let rows=abonos.map(a=>{
-    acum+=a.valor;
-    return `<tr><td>${formatDate(a.fecha)}</td><td>${money(a.valor)}</td><td>${money(acum)}</td><td>${money(Math.max(DEUDA-acum,0))}</td></tr>`;
-  }).join("");
-  document.getElementById("tabla").innerHTML=`<table><thead><tr><th>Fecha</th><th>Abono</th><th>Total</th><th>Saldo</th></tr></thead><tbody>${rows}</tbody></table>`;
+
+const total=abonos.reduce((s,a)=>s+Number(a.valor),0);
+
+const saldo=DEUDA-total;
+
+document.getElementById("total").textContent=money(total);
+
+document.getElementById("saldo").textContent=money(Math.max(saldo,0));
+
+const estado=document.getElementById("estado");
+
+if(saldo===0)
+estado.innerHTML='<div class="ok">✅ DEUDA CANCELADA<br>Saldo pendiente: $0</div>';
+
+else if(saldo<0)
+estado.innerHTML=`<div class="warn">⚠️ Hay un excedente de ${money(-saldo)}</div>`;
+
+else
+estado.innerHTML="";
+
+let acum=0;
+
+if(!abonos.length){
+
+document.getElementById("tabla").innerHTML=
+'<div class="small">Aún no hay abonos registrados.</div>';
+
+return;
+
 }
+
+let rows=abonos.map((a,i)=>{
+
+const valor=Number(a.valor);
+
+acum+=valor;
+
+return `
+<tr>
+<td>${formatDate(a.fecha)}</td>
+<td>${money(valor)}</td>
+<td>${money(acum)}</td>
+<td>${money(Math.max(DEUDA-acum,0))}</td>
+<td>
+<button class="delete" onclick="eliminar(${i})">🗑️</button>
+</td>
+</tr>
+`;
+
+}).join("");
+
+document.getElementById("tabla").innerHTML=`
+<table>
+<thead>
+<tr>
+<th>Fecha</th>
+<th>Abono</th>
+<th>Total</th>
+<th>Saldo</th>
+<th></th>
+</tr>
+</thead>
+
+<tbody>
+${rows}
+</tbody>
+
+</table>
+`;
+
+}
+
 function registrar(){
-  const fecha=document.getElementById("fecha").value;
-  const valor=Number(document.getElementById("valor").value);
-  if(!fecha||!valor||valor<=0){alert("Ingresa una fecha y un valor válido.");return;}
-  const total=abonos.reduce((s,a)=>s+a.valor,0);
-  if(total+valor>DEUDA){
-    const excedente=total+valor-DEUDA;
-    if(!confirm(`Este abono genera un excedente de ${money(excedente)}. ¿Deseas registrarlo?`)) return;
-  }
-  abonos.push({fecha,valor});
-  abonos.sort((a,b)=>a.fecha.localeCompare(b.fecha));
-  localStorage.setItem("abonosPrestamo",JSON.stringify(abonos));
-  document.getElementById("valor").value="";
-  render();
+
+const fecha=document.getElementById("fecha").value;
+
+const valor=Number(document.getElementById("valor").value);
+
+if(!fecha||!valor||valor<=0){
+
+alert("Ingresa una fecha y un valor válido.");
+
+return;
+
 }
-document.getElementById("fecha").value=new Date().toISOString().slice(0,10);
+
+const total=abonos.reduce((s,a)=>s+Number(a.valor),0);
+
+if(total+valor>DEUDA){
+
+const excedente=total+valor-DEUDA;
+
+if(!confirm(`Este abono genera un excedente de ${money(excedente)}. ¿Deseas registrarlo?`))
+return;
+
+}
+
+abonos.push({fecha,valor});
+
+abonos.sort((a,b)=>a.fecha.localeCompare(b.fecha));
+
+localStorage.setItem("abonosPrestamo",JSON.stringify(abonos));
+
+document.getElementById("valor").value="";
+
 render();
+
+}
+
+function eliminar(indice){
+
+const abono=abonos[indice];
+
+if(!abono)
+return;
+
+const confirmar=confirm(
+`¿Deseas eliminar este abono de ${money(Number(abono.valor))} realizado el ${formatDate(abono.fecha)}?`
+);
+
+if(!confirmar)
+return;
+
+abonos.splice(indice,1);
+
+localStorage.setItem("abonosPrestamo",JSON.stringify(abonos));
+
+render();
+
+}
+
+document.getElementById("fecha").value=new Date().toISOString().slice(0,10);
+
+render();
+
 </script>
+
 </body>
+
 </html>
