@@ -306,7 +306,23 @@ Guardar cliente
 <h3 id="nombreCliente"></h3>
 
 <div class="small" id="datosCliente"></div>
+<div style="display:flex;gap:8px;margin-top:12px;">
 
+<button
+onclick="editarCliente()"
+style="flex:1;background:#2563eb;"
+>
+✏️ Editar
+</button>
+
+<button
+onclick="eliminarCliente()"
+style="flex:1;background:#dc2626;"
+>
+🗑️ Eliminar
+</button>
+
+</div>
 </div>
 
 
@@ -1107,7 +1123,175 @@ renderCliente();
 /* =====================================
    INICIO
 ===================================== */
+/* =====================================
+   EDITAR CLIENTE
+===================================== */
 
+function editarCliente(){
+
+if(!clienteActual)
+return;
+
+const nombre=prompt(
+"Nombre completo:",
+clienteActual.nombre
+);
+
+if(nombre===null)
+return;
+
+const identificacion=prompt(
+"Número de identificación:",
+clienteActual.identificacion||""
+);
+
+if(identificacion===null)
+return;
+
+const telefono=prompt(
+"Teléfono:",
+clienteActual.telefono||""
+);
+
+if(telefono===null)
+return;
+
+const capitalTexto=prompt(
+"Capital prestado:",
+clienteActual.capital
+);
+
+if(capitalTexto===null)
+return;
+
+const interesTexto=prompt(
+"Interés acordado:",
+clienteActual.interes
+);
+
+if(interesTexto===null)
+return;
+
+const capital=Number(capitalTexto);
+const interes=Number(interesTexto);
+
+if(!nombre.trim()){
+
+alert("El nombre no puede estar vacío.");
+
+return;
+
+}
+
+if(!capital || capital<=0){
+
+alert("El capital debe ser mayor que cero.");
+
+return;
+
+}
+
+if(interes<0){
+
+alert("El interés no puede ser negativo.");
+
+return;
+
+}
+
+const deudaNueva=capital+interes;
+
+const totalAbonado=clienteActual.abonos.reduce(
+(s,a)=>s+Number(a.valor),
+0
+);
+
+if(totalAbonado>deudaNueva){
+
+const confirmar=confirm(
+`Los abonos actuales (${money(totalAbonado)}) superan la nueva deuda (${money(deudaNueva)}). ¿Deseas continuar?`
+);
+
+if(!confirmar)
+return;
+
+}
+
+clienteActual.nombre=nombre.trim();
+
+clienteActual.identificacion=
+identificacion.trim();
+
+clienteActual.telefono=
+telefono.trim();
+
+clienteActual.capital=capital;
+
+clienteActual.interes=interes;
+
+guardarClientes();
+
+renderCliente();
+
+alert("✅ Cliente actualizado correctamente.");
+
+}
+
+
+/* =====================================
+   ELIMINAR CLIENTE
+===================================== */
+
+function eliminarCliente(){
+
+if(!clienteActual)
+return;
+
+const totalAbonado=clienteActual.abonos.reduce(
+(s,a)=>s+Number(a.valor),
+0
+);
+
+const deuda=
+Number(clienteActual.capital)+
+Number(clienteActual.interes);
+
+const saldo=deuda-totalAbonado;
+
+const confirmar=confirm(
+`¿Estás seguro de eliminar a ${clienteActual.nombre}?\n\n`+
+`Deuda total: ${money(deuda)}\n`+
+`Total abonado: ${money(totalAbonado)}\n`+
+`Saldo pendiente: ${money(Math.max(saldo,0))}\n\n`+
+`⚠️ También se eliminará todo su historial de abonos.`
+);
+
+if(!confirmar)
+return;
+
+clientes=clientes.filter(
+c=>c.id!==clienteActual.id
+);
+
+guardarClientes();
+
+clienteActual=null;
+
+document.getElementById(
+"pantallaCliente"
+).classList.add("hidden");
+
+document.getElementById(
+"formularioCliente"
+).classList.add("hidden");
+
+document.getElementById(
+"pantallaClientes"
+).classList.remove("hidden");
+
+renderClientes();
+
+}
 migrarDatosAntiguos();
 
 document.getElementById(
