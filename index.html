@@ -402,7 +402,84 @@ Registrar abono
 </div>
 
 </div>
+<!-- =====================================
+     PANTALLA EDITAR CLIENTE
+===================================== -->
 
+<div id="pantallaEditarCliente" class="card hidden">
+
+<h2>✏️ Editar cliente</h2>
+
+<label class="small">Nombre completo</label>
+
+<input
+id="editarNombre"
+type="text"
+placeholder="Nombre completo"
+>
+
+<label class="small">Número de identificación</label>
+
+<input
+id="editarIdentificacion"
+type="text"
+placeholder="Número de identificación"
+>
+
+<label class="small">Teléfono</label>
+
+<input
+id="editarTelefono"
+type="tel"
+placeholder="Teléfono"
+>
+
+<label class="small">Capital prestado</label>
+
+<input
+id="editarCapital"
+type="number"
+inputmode="numeric"
+min="1"
+placeholder="Ej. 5000000"
+oninput="actualizarDeudaEdicion()"
+>
+
+<label class="small">Interés acordado</label>
+
+<input
+id="editarInteres"
+type="number"
+inputmode="numeric"
+min="0"
+placeholder="Ej. 500000"
+oninput="actualizarDeudaEdicion()"
+>
+
+<div class="row">
+<span class="label">🧾 Deuda total</span>
+<span class="value" id="editarDeuda">$0</span>
+</div>
+
+<div style="display:flex;gap:8px;margin-top:14px;">
+
+<button
+onclick="guardarCambiosCliente()"
+style="flex:1;background:#16a34a;"
+>
+💾 Guardar cambios
+</button>
+
+<button
+onclick="cancelarEdicion()"
+style="flex:1;background:#6b7280;"
+>
+↩️ Cancelar
+</button>
+
+</div>
+
+</div>
 
 <script>
 
@@ -1132,60 +1209,82 @@ function editarCliente(){
 if(!clienteActual)
 return;
 
-const nombre=prompt(
-"Nombre completo:",
-clienteActual.nombre
-);
+document.getElementById("pantallaCliente")
+.classList.add("hidden");
 
-if(nombre===null)
+document.getElementById("pantallaEditarCliente")
+.classList.remove("hidden");
+
+document.getElementById("editarNombre")
+.value=clienteActual.nombre||"";
+
+document.getElementById("editarIdentificacion")
+.value=clienteActual.identificacion||"";
+
+document.getElementById("editarTelefono")
+.value=clienteActual.telefono||"";
+
+document.getElementById("editarCapital")
+.value=clienteActual.capital;
+
+document.getElementById("editarInteres")
+.value=clienteActual.interes;
+
+actualizarDeudaEdicion();
+
+}
+
+function actualizarDeudaEdicion(){
+
+const capital=Number(
+document.getElementById("editarCapital").value
+)||0;
+
+const interes=Number(
+document.getElementById("editarInteres").value
+)||0;
+
+document.getElementById("editarDeuda")
+.textContent=money(capital+interes);
+
+}
+
+function guardarCambiosCliente(){
+
+if(!clienteActual)
 return;
 
-const identificacion=prompt(
-"Número de identificación:",
-clienteActual.identificacion||""
+const nombre=
+document.getElementById("editarNombre")
+.value.trim();
+
+const identificacion=
+document.getElementById("editarIdentificacion")
+.value.trim();
+
+const telefono=
+document.getElementById("editarTelefono")
+.value.trim();
+
+const capital=Number(
+document.getElementById("editarCapital").value
 );
 
-if(identificacion===null)
-return;
-
-const telefono=prompt(
-"Teléfono:",
-clienteActual.telefono||""
+const interes=Number(
+document.getElementById("editarInteres").value
 );
 
-if(telefono===null)
-return;
+if(!nombre){
 
-const capitalTexto=prompt(
-"Capital prestado:",
-clienteActual.capital
-);
-
-if(capitalTexto===null)
-return;
-
-const interesTexto=prompt(
-"Interés acordado:",
-clienteActual.interes
-);
-
-if(interesTexto===null)
-return;
-
-const capital=Number(capitalTexto);
-const interes=Number(interesTexto);
-
-if(!nombre.trim()){
-
-alert("El nombre no puede estar vacío.");
+alert("⚠️ El nombre no puede estar vacío.");
 
 return;
 
 }
 
-if(!capital || capital<=0){
+if(!capital||capital<=0){
 
-alert("El capital debe ser mayor que cero.");
+alert("⚠️ El capital debe ser mayor que cero.");
 
 return;
 
@@ -1193,7 +1292,7 @@ return;
 
 if(interes<0){
 
-alert("El interés no puede ser negativo.");
+alert("⚠️ El interés no puede ser negativo.");
 
 return;
 
@@ -1201,29 +1300,27 @@ return;
 
 const deudaNueva=capital+interes;
 
-const totalAbonado=clienteActual.abonos.reduce(
-(s,a)=>s+Number(a.valor),
-0
+const totalAbonado=
+clienteActual.abonos.reduce(
+(s,a)=>s+Number(a.valor),0
 );
 
-if(totalAbonado>deudaNueva){
+if(deudaNueva<totalAbonado){
 
-const confirmar=confirm(
-`Los abonos actuales (${money(totalAbonado)}) superan la nueva deuda (${money(deudaNueva)}). ¿Deseas continuar?`
+alert(
+"⚠️ La nueva deuda no puede ser menor que el total ya abonado.\n\n"+
+"Total abonado: "+money(totalAbonado)
 );
 
-if(!confirmar)
 return;
 
 }
 
-clienteActual.nombre=nombre.trim();
+clienteActual.nombre=nombre;
 
-clienteActual.identificacion=
-identificacion.trim();
+clienteActual.identificacion=identificacion;
 
-clienteActual.telefono=
-telefono.trim();
+clienteActual.telefono=telefono;
 
 clienteActual.capital=capital;
 
@@ -1231,13 +1328,34 @@ clienteActual.interes=interes;
 
 guardarClientes();
 
+document.getElementById(
+"pantallaEditarCliente"
+).classList.add("hidden");
+
+document.getElementById(
+"pantallaCliente"
+).classList.remove("hidden");
+
 renderCliente();
 
-alert("✅ Cliente actualizado correctamente.");
+alert(
+"✅ Datos guardados exitosamente.\n\n"+
+"Los datos del cliente fueron actualizados correctamente."
+);
 
 }
 
+function cancelarEdicion(){
 
+document.getElementById(
+"pantallaEditarCliente"
+).classList.add("hidden");
+
+document.getElementById(
+"pantallaCliente"
+).classList.remove("hidden");
+
+}
 /* =====================================
    ELIMINAR CLIENTE
 ===================================== */
