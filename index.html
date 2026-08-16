@@ -1,20 +1,15 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="Control Préstamos">
-
+<meta name="apple-mobile-web-app-title" content="Control de Préstamos">
 <title>Control de Préstamos</title>
 
 <style>
-
-*{
-box-sizing:border-box
-}
+*{box-sizing:border-box}
 
 body{
 margin:0;
@@ -41,7 +36,7 @@ margin-bottom:20px
 }
 
 .card{
-background:white;
+background:#fff;
 border-radius:18px;
 padding:18px;
 margin-bottom:14px;
@@ -93,17 +88,13 @@ padding:14px;
 font-size:16px;
 font-weight:700;
 background:#111827;
-color:white;
+color:#fff;
 margin-top:6px
 }
 
 .secondary{
 background:#e5e7eb;
 color:#111827
-}
-
-.danger{
-background:#dc2626
 }
 
 .client{
@@ -136,20 +127,21 @@ margin-top:8px
 margin-bottom:14px
 }
 
-table{
-width:100%;
-border-collapse:collapse;
-font-size:13px
-}
-
-th,td{
-text-align:left;
-padding:9px 4px;
-border-bottom:1px solid #eee
-}
-
-th{
+.small{
+font-size:13px;
 color:#6b7280
+}
+
+.delete{
+width:auto;
+padding:7px 10px;
+font-size:13px;
+background:#dc2626;
+margin:0
+}
+
+.hidden{
+display:none
 }
 
 .ok{
@@ -168,25 +160,38 @@ border-radius:12px;
 font-weight:700
 }
 
-.small{
-font-size:13px;
+.loan-card{
+border:1px solid #e5e7eb;
+border-radius:14px;
+padding:14px;
+margin-top:10px
+}
+
+.loan-card button{
+margin-top:10px
+}
+
+.section-title{
+font-weight:800;
+margin-bottom:8px
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+font-size:13px
+}
+
+th,td{
+text-align:left;
+padding:9px 4px;
+border-bottom:1px solid #eee
+}
+
+th{
 color:#6b7280
 }
-
-.delete{
-width:auto;
-padding:7px 10px;
-font-size:13px;
-background:#dc2626;
-margin:0
-}
-
-.hidden{
-display:none
-}
-
 </style>
-
 </head>
 
 <body>
@@ -201,7 +206,7 @@ Registro personal de clientes y préstamos
 
 
 <!-- ========================= -->
-<!-- LISTA DE CLIENTES -->
+<!-- CLIENTES -->
 <!-- ========================= -->
 
 <div id="pantallaClientes">
@@ -222,20 +227,25 @@ Registro personal de clientes y préstamos
 
 
 <!-- ========================= -->
-<!-- FORMULARIO NUEVO CLIENTE -->
+<!-- REGISTRAR CLIENTE -->
 <!-- ========================= -->
 
 <div id="formularioCliente" class="hidden">
 
 <div class="card">
 
-<button class="secondary back" onclick="volverClientes()">
+<button
+class="secondary back"
+onclick="volverClientes()"
+>
 ← Volver a clientes
 </button>
 
 <h3>👤 Registrar cliente</h3>
 
-<label class="small">Nombre completo</label>
+<label class="small">
+Nombre completo
+</label>
 
 <input
 id="nuevoNombre"
@@ -243,7 +253,9 @@ type="text"
 placeholder="Ej. Juan Pérez"
 >
 
-<label class="small">Número de identificación</label>
+<label class="small">
+Número de identificación
+</label>
 
 <input
 id="nuevoIdentificacion"
@@ -251,40 +263,24 @@ type="text"
 placeholder="Opcional"
 >
 
-<label class="small">Teléfono</label>
+<label class="small">
+Teléfono
+</label>
 
 <input
 id="nuevoTelefono"
 type="tel"
 placeholder="Opcional"
 >
-<label class="small">Dirección</label>
+
+<label class="small">
+Dirección
+</label>
 
 <input
 id="nuevoDireccion"
 type="text"
 placeholder="Opcional"
->
-<h3>💰 Información del préstamo</h3>
-
-<label class="small">Capital prestado</label>
-
-<input
-id="nuevoCapital"
-type="number"
-inputmode="numeric"
-min="1"
-placeholder="Ej. 2000000"
->
-
-<label class="small">Interés acordado</label>
-
-<input
-id="nuevoInteres"
-type="number"
-inputmode="numeric"
-min="0"
-placeholder="Ej. 400000"
 >
 
 <button onclick="crearCliente()">
@@ -302,7 +298,10 @@ Guardar cliente
 
 <div id="pantallaCliente" class="hidden">
 
-<button class="secondary back" onclick="volverClientes()">
+<button
+class="secondary back"
+onclick="volverClientes()"
+>
 ← Volver a clientes
 </button>
 
@@ -311,8 +310,15 @@ Guardar cliente
 
 <h3 id="nombreCliente"></h3>
 
-<div class="small" id="datosCliente"></div>
-<div style="display:flex;gap:8px;margin-top:12px;">
+<div
+class="small"
+id="datosCliente"
+></div>
+
+
+<div
+style="display:flex;gap:8px;margin-top:12px;"
+>
 
 <button
 onclick="editarCliente()"
@@ -329,34 +335,107 @@ style="flex:1;background:#dc2626;"
 </button>
 
 </div>
+
+
+<button
+onclick="mostrarNuevoPrestamo()"
+style="background:#059669;"
+>
+➕ Nuevo préstamo
+</button>
+
 </div>
 
 
 <div class="card">
 
-<div class="row">
-<span class="label">💰 Capital prestado</span>
-<span class="value" id="capital"></span>
+<div class="section-title">
+💰 Préstamos del cliente
+</div>
+
+<div id="listaPrestamos"></div>
+
+</div>
+
+
+<!-- ========================= -->
+<!-- DETALLE DEL PRÉSTAMO -->
+<!-- ========================= -->
+
+<div
+id="detallePrestamo"
+class="hidden"
+>
+
+<div class="card">
+
+<div class="section-title">
+📄 Préstamo seleccionado
 </div>
 
 <div class="row">
-<span class="label">📈 Interés acordado</span>
-<span class="value" id="interes"></span>
+
+<span class="label">
+💰 Capital prestado
+</span>
+
+<span
+class="value"
+id="capital"
+></span>
+
 </div>
 
 <div class="row">
-<span class="label">🧾 Deuda total</span>
-<span class="value" id="deuda"></span>
+
+<span class="label">
+📈 Interés acordado
+</span>
+
+<span
+class="value"
+id="interes"
+></span>
+
 </div>
 
 <div class="row">
-<span class="label">📊 Total abonado</span>
-<span class="value" id="total"></span>
+
+<span class="label">
+🧾 Deuda total
+</span>
+
+<span
+class="value"
+id="deuda"
+></span>
+
 </div>
 
 <div class="row">
-<span class="label">💵 Saldo pendiente</span>
-<span class="value saldo" id="saldo"></span>
+
+<span class="label">
+📊 Total abonado
+</span>
+
+<span
+class="value"
+id="total"
+></span>
+
+</div>
+
+<div class="row">
+
+<span class="label">
+💵 Saldo pendiente
+</span>
+
+<span
+class="value saldo"
+id="saldo"
+></span>
+
 </div>
 
 <div id="estado"></div>
@@ -364,19 +443,24 @@ style="flex:1;background:#dc2626;"
 </div>
 
 
-<!-- ========================= -->
-<!-- REGISTRAR ABONO -->
-<!-- ========================= -->
-
 <div class="card">
 
-<h3>➕ Registrar abono</h3>
+<h3>
+➕ Registrar abono
+</h3>
 
-<label class="small">Fecha</label>
+<label class="small">
+Fecha
+</label>
 
-<input id="fecha" type="date">
+<input
+id="fecha"
+type="date"
+>
 
-<label class="small">Valor del abono</label>
+<label class="small">
+Valor del abono
+</label>
 
 <input
 id="valor"
@@ -393,13 +477,11 @@ Registrar abono
 </div>
 
 
-<!-- ========================= -->
-<!-- HISTORIAL -->
-<!-- ========================= -->
-
 <div class="card">
 
-<h3>📋 Historial</h3>
+<h3>
+📋 Historial
+</h3>
 
 <div id="tabla"></div>
 
@@ -408,15 +490,101 @@ Registrar abono
 </div>
 
 </div>
-<!-- =====================================
-     PANTALLA EDITAR CLIENTE
-===================================== -->
 
-<div id="pantallaEditarCliente" class="card hidden">
 
-<h2>✏️ Editar cliente</h2>
+<!-- ========================= -->
+<!-- NUEVO PRÉSTAMO -->
+<!-- ========================= -->
 
-<label class="small">Nombre completo</label>
+<div
+id="pantallaNuevoPrestamo"
+class="hidden"
+>
+
+<div class="card">
+
+<button
+class="secondary back"
+onclick="cancelarNuevoPrestamo()"
+>
+← Volver al cliente
+</button>
+
+<h3>
+💰 Nuevo préstamo
+</h3>
+
+<div
+class="small"
+id="clientePrestamoNombre"
+></div>
+
+<label class="small">
+Capital prestado
+</label>
+
+<input
+id="nuevoCapital"
+type="number"
+inputmode="numeric"
+min="1"
+placeholder="Ej. 2000000"
+oninput="actualizarDeudaNueva()"
+>
+
+<label class="small">
+Interés acordado
+</label>
+
+<input
+id="nuevoInteres"
+type="number"
+inputmode="numeric"
+min="0"
+placeholder="Ej. 400000"
+oninput="actualizarDeudaNueva()"
+>
+
+<div class="row">
+
+<span class="label">
+🧾 Deuda total
+</span>
+
+<span
+class="value"
+id="nuevaDeuda"
+>
+$0
+</span>
+
+</div>
+
+<button onclick="crearPrestamo()">
+💾 Guardar préstamo
+</button>
+
+</div>
+
+</div>
+
+
+<!-- ========================= -->
+<!-- EDITAR CLIENTE -->
+<!-- ========================= -->
+
+<div
+id="pantallaEditarCliente"
+class="card hidden"
+>
+
+<h2>
+✏️ Editar cliente
+</h2>
+
+<label class="small">
+Nombre completo
+</label>
 
 <input
 id="editarNombre"
@@ -424,7 +592,9 @@ type="text"
 placeholder="Nombre completo"
 >
 
-<label class="small">Número de identificación</label>
+<label class="small">
+Número de identificación
+</label>
 
 <input
 id="editarIdentificacion"
@@ -432,7 +602,9 @@ type="text"
 placeholder="Número de identificación"
 >
 
-<label class="small">Teléfono</label>
+<label class="small">
+Teléfono
+</label>
 
 <input
 id="editarTelefono"
@@ -440,7 +612,9 @@ type="tel"
 placeholder="Teléfono"
 >
 
-<label class="small">Dirección</label>
+<label class="small">
+Dirección
+</label>
 
 <input
 id="editarDireccion"
@@ -448,45 +622,21 @@ type="text"
 placeholder="Dirección"
 >
 
-<label class="small">Capital prestado</label>
 
-<input
-id="editarCapital"
-type="number"
-inputmode="numeric"
-min="1"
-placeholder="Ej. 5000000"
-oninput="actualizarDeudaEdicion()"
+<div
+style="display:flex;gap:8px;margin-top:14px"
 >
-
-<label class="small">Interés acordado</label>
-
-<input
-id="editarInteres"
-type="number"
-inputmode="numeric"
-min="0"
-placeholder="Ej. 500000"
-oninput="actualizarDeudaEdicion()"
->
-
-<div class="row">
-<span class="label">🧾 Deuda total</span>
-<span class="value" id="editarDeuda">$0</span>
-</div>
-
-<div style="display:flex;gap:8px;margin-top:14px;">
 
 <button
 onclick="guardarCambiosCliente()"
-style="flex:1;background:#16a34a;"
+style="flex:1;background:#16a34a"
 >
 💾 Guardar cambios
 </button>
 
 <button
 onclick="cancelarEdicion()"
-style="flex:1;background:#6b7280;"
+style="flex:1;background:#6b7280"
 >
 ↩️ Cancelar
 </button>
@@ -495,33 +645,30 @@ style="flex:1;background:#6b7280;"
 
 </div>
 
+</div>
+
+
 <script>
 
-/* =====================================
-   DATOS
-===================================== */
-
-let clientes=JSON.parse(
+let clientes=
+JSON.parse(
 localStorage.getItem("clientesPrestamo")||"[]"
 );
 
 let clienteActual=null;
 
+let prestamoActual=null;
 
-/* =====================================
-   FORMATO DE DINERO
-===================================== */
 
 function money(n){
 
-return "$"+Math.round(n).toLocaleString("es-CO");
+return "$"+
+Math.round(
+Number(n)||0
+).toLocaleString("es-CO");
 
 }
 
-
-/* =====================================
-   FORMATO DE FECHA
-===================================== */
 
 function formatDate(s){
 
@@ -531,10 +678,6 @@ return `${d}/${m}/${y}`;
 
 }
 
-
-/* =====================================
-   GUARDAR CLIENTES
-===================================== */
 
 function guardarClientes(){
 
@@ -547,122 +690,135 @@ JSON.stringify(clientes)
 
 
 /* =====================================
-   MIGRACIÓN DE DATOS ANTIGUOS
+   MIGRAR DATOS ANTIGUOS
 ===================================== */
 
-function migrarDatosAntiguos(){
+function migrarDatos(){
 
-const antiguos=JSON.parse(
+clientes.forEach(c=>{
+
+if(!Array.isArray(c.abonos))
+c.abonos=[];
+
+
+if(!Array.isArray(c.prestamos)){
+
+if(
+c.capital!=null||
+c.interes!=null||
+c.abonos.length
+){
+
+c.prestamos=[{
+
+id:Date.now()+Math.random(),
+
+capital:Number(c.capital)||0,
+
+interes:Number(c.interes)||0,
+
+abonos:c.abonos
+
+}];
+
+}
+else{
+
+c.prestamos=[];
+
+}
+
+}
+
+
+delete c.capital;
+
+delete c.interes;
+
+delete c.abonos;
+
+});
+
+
+const antiguos=
+JSON.parse(
 localStorage.getItem("abonosPrestamo")||"[]"
 );
 
+
 if(
-antiguos.length>0 &&
-clientes.length===0
+antiguos.length&&
+!clientes.length
 ){
 
-const cliente={
-id:Date.now(),
-nombre:"Cliente actual",
-identificacion:"",
-telefono:"",
-capital:2000000,
-interes:400000,
-abonos:antiguos
-};
+clientes.push({
 
-clientes.push(cliente);
+id:Date.now(),
+
+nombre:"Cliente actual",
+
+identificacion:"",
+
+telefono:"",
+
+direccion:"",
+
+prestamos:[{
+
+id:Date.now()+1,
+
+capital:2000000,
+
+interes:400000,
+
+abonos:antiguos
+
+}]
+
+});
+
+}
 
 guardarClientes();
 
 }
 
-}
-
 
 /* =====================================
-   MOSTRAR CLIENTES
+   OCULTAR PANTALLAS
 ===================================== */
 
-function renderClientes(){
+function ocultarTodo(){
 
-const lista=document.getElementById("listaClientes");
+[
+"pantallaClientes",
+"formularioCliente",
+"pantallaCliente",
+"pantallaNuevoPrestamo",
+"pantallaEditarCliente"
+]
+.forEach(id=>{
 
-if(!clientes.length){
+document
+.getElementById(id)
+.classList.add("hidden");
 
-lista.innerHTML=`
-<div class="card">
-
-<div class="small">
-Aún no tienes clientes registrados.
-</div>
-
-</div>
-`;
-
-return;
-
-}
-
-
-lista.innerHTML=clientes.map(cliente=>{
-
-const deuda=
-Number(cliente.capital)+
-Number(cliente.interes);
-
-const total=cliente.abonos.reduce(
-(s,a)=>s+Number(a.valor),0
-);
-
-const saldo=Math.max(
-deuda-total,
-0
-);
-
-return `
-
-<div class="client"
-onclick="seleccionarCliente(${cliente.id})">
-
-<div class="client-name">
-👤 ${cliente.nombre}
-</div>
-
-<div class="client-info">
-💰 Deuda total: ${money(deuda)}
-</div>
-
-<div class="client-saldo">
-💵 Saldo: ${money(saldo)}
-</div>
-
-</div>
-
-`;
-
-}).join("");
+});
 
 }
 
 
 /* =====================================
-   MOSTRAR FORMULARIO
+   MOSTRAR FORMULARIO CLIENTE
 ===================================== */
 
 function mostrarFormularioCliente(){
 
-document.getElementById(
-"pantallaClientes"
-).classList.add("hidden");
+ocultarTodo();
 
-document.getElementById(
-"pantallaCliente"
-).classList.add("hidden");
-
-document.getElementById(
-"formularioCliente"
-).classList.remove("hidden");
+document
+.getElementById("formularioCliente")
+.classList.remove("hidden");
 
 }
 
@@ -673,19 +829,15 @@ document.getElementById(
 
 function volverClientes(){
 
-document.getElementById(
-"pantallaClientes"
-).classList.remove("hidden");
-
-document.getElementById(
-"pantallaCliente"
-).classList.add("hidden");
-
-document.getElementById(
-"formularioCliente"
-).classList.add("hidden");
+ocultarTodo();
 
 clienteActual=null;
+
+prestamoActual=null;
+
+document
+.getElementById("pantallaClientes")
+.classList.remove("hidden");
 
 renderClientes();
 
@@ -699,57 +851,35 @@ renderClientes();
 function crearCliente(){
 
 const nombre=
-document.getElementById(
-"nuevoNombre"
-).value.trim();
+document
+.getElementById("nuevoNombre")
+.value
+.trim();
 
 const identificacion=
-document.getElementById(
-"nuevoIdentificacion"
-).value.trim();
+document
+.getElementById("nuevoIdentificacion")
+.value
+.trim();
 
 const telefono=
-document.getElementById(
-"nuevoTelefono"
-).value.trim();
+document
+.getElementById("nuevoTelefono")
+.value
+.trim();
 
 const direccion=
-document.getElementById(
-"nuevoDireccion"
-).value.trim();
-     
-const capital=Number(
-document.getElementById(
-"nuevoCapital"
-).value
-);
-
-const interes=Number(
-document.getElementById(
-"nuevoInteres"
-).value
-);
+document
+.getElementById("nuevoDireccion")
+.value
+.trim();
 
 
 if(!nombre){
 
-alert("Ingresa el nombre del cliente.");
-
-return;
-
-}
-
-if(!capital || capital<=0){
-
-alert("Ingresa un capital válido.");
-
-return;
-
-}
-
-if(interes<0){
-
-alert("Ingresa un interés válido.");
+alert(
+"Ingresa el nombre del cliente."
+);
 
 return;
 
@@ -768,13 +898,9 @@ telefono,
 
 direccion,
 
-capital,
+prestamos:[]
 
-interes,
-
-abonos:[]
 };
-     
 
 
 clientes.push(cliente);
@@ -798,16 +924,10 @@ document.getElementById(
 "nuevoDireccion"
 ).value="";
 
-document.getElementById(
-"nuevoCapital"
-).value="";
 
-document.getElementById(
-"nuevoInteres"
-).value="";
-
-
-seleccionarCliente(cliente.id);
+seleccionarCliente(
+cliente.id
+);
 
 }
 
@@ -818,7 +938,8 @@ seleccionarCliente(cliente.id);
 
 function seleccionarCliente(id){
 
-const cliente=clientes.find(
+const cliente=
+clientes.find(
 c=>c.id===id
 );
 
@@ -827,21 +948,143 @@ return;
 
 clienteActual=cliente;
 
+prestamoActual=null;
 
-document.getElementById(
-"pantallaClientes"
-).classList.add("hidden");
+ocultarTodo();
 
-document.getElementById(
-"formularioCliente"
-).classList.add("hidden");
-
-document.getElementById(
-"pantallaCliente"
-).classList.remove("hidden");
-
+document
+.getElementById("pantallaCliente")
+.classList.remove("hidden");
 
 renderCliente();
+
+}
+
+
+/* =====================================
+   ESCAPAR HTML
+===================================== */
+
+function escapeHtml(t){
+
+return String(t||"")
+.replace(
+/[&<>"']/g,
+m=>({
+"&":"&amp;",
+"<":"&lt;",
+">":"&gt;",
+"\"":"&quot;",
+"'":"&#039;"
+}[m])
+);
+
+}
+
+
+/* =====================================
+   MOSTRAR CLIENTES
+===================================== */
+
+function renderClientes(){
+
+const lista=
+document.getElementById(
+"listaClientes"
+);
+
+
+if(!clientes.length){
+
+lista.innerHTML=
+`
+<div class="card">
+
+<div class="small">
+Aún no tienes clientes registrados.
+</div>
+
+</div>
+`;
+
+return;
+
+}
+
+
+lista.innerHTML=
+clientes.map(c=>{
+
+const ps=
+c.prestamos||[];
+
+const deuda=
+ps.reduce(
+(s,p)=>
+s+
+Number(p.capital||0)+
+Number(p.interes||0),
+0
+);
+
+const abonado=
+ps.reduce(
+(s,p)=>
+s+
+(p.abonos||[]).reduce(
+(x,a)=>
+x+
+Number(a.valor||0),
+0
+),
+0
+);
+
+const saldo=
+Math.max(
+deuda-abonado,
+0
+);
+
+
+return `
+<div
+class="client"
+onclick="seleccionarCliente(${c.id})"
+>
+
+<div class="client-name">
+👤 ${escapeHtml(c.nombre)}
+</div>
+
+<div class="client-info">
+
+${
+ps.length
+?
+"💰 Préstamos: "+ps.length
+:
+"📄 Sin préstamo registrado"
+}
+
+</div>
+
+<div class="client-saldo">
+
+${
+ps.length
+?
+"💵 Saldo total: "+money(saldo)
+:
+"➕ Registrar préstamo"
+}
+
+</div>
+
+</div>
+`;
+
+}).join("");
 
 }
 
@@ -864,51 +1107,210 @@ document.getElementById(
 
 let datos=[];
 
+
 if(clienteActual.identificacion)
+
 datos.push(
 "🪪 "+clienteActual.identificacion
 );
 
+
 if(clienteActual.telefono)
+
 datos.push(
 "📱 "+clienteActual.telefono
 );
 
+
 if(clienteActual.direccion)
+
 datos.push(
 "📍 "+clienteActual.direccion
 );
-     
+
+
 document.getElementById(
 "datosCliente"
 ).textContent=
 datos.join("  • ");
 
 
-const deuda=
-Number(clienteActual.capital)+
-Number(clienteActual.interes);
+renderListaPrestamos();
 
+
+if(prestamoActual)
+
+renderPrestamo();
+
+else
+
+document
+.getElementById("detallePrestamo")
+.classList.add("hidden");
+
+}
+
+
+/* =====================================
+   LISTA DE PRÉSTAMOS
+===================================== */
+
+function renderListaPrestamos(){
+
+const cont=
+document.getElementById(
+"listaPrestamos"
+);
+
+const ps=
+clienteActual.prestamos||[];
+
+
+if(!ps.length){
+
+cont.innerHTML=
+`
+<div class="small">
+Este cliente todavía no tiene préstamos registrados.
+</div>
+`;
+
+return;
+
+}
+
+
+cont.innerHTML=
+ps.map((p,i)=>{
+
+const deuda=
+Number(p.capital)+
+Number(p.interes);
 
 const total=
-clienteActual.abonos.reduce(
-(s,a)=>s+Number(a.valor),0
+(p.abonos||[]).reduce(
+(s,a)=>
+s+
+Number(a.valor),
+0
+);
+
+const saldo=
+Math.max(
+deuda-total,
+0
 );
 
 
-const saldo=deuda-total;
+return `
+<div class="loan-card">
+
+<strong>
+Préstamo ${i+1}
+</strong>
+
+<div class="small">
+
+Capital: ${money(p.capital)}
+•
+Interés: ${money(p.interes)}
+
+</div>
+
+<div
+style="margin-top:6px;font-weight:800"
+>
+
+💵 Saldo: ${money(saldo)}
+
+</div>
+
+<button
+onclick="seleccionarPrestamo(${p.id})"
+>
+Ver préstamo
+</button>
+
+</div>
+`;
+
+}).join("");
+
+}
+
+
+/* =====================================
+   SELECCIONAR PRÉSTAMO
+===================================== */
+
+function seleccionarPrestamo(id){
+
+const p=
+(clienteActual.prestamos||[])
+.find(
+x=>x.id===id
+);
+
+if(!p)
+return;
+
+prestamoActual=p;
+
+renderListaPrestamos();
+
+renderPrestamo();
+
+}
+
+
+/* =====================================
+   MOSTRAR PRÉSTAMO
+===================================== */
+
+function renderPrestamo(){
+
+if(!prestamoActual)
+return;
+
+
+document
+.getElementById("detallePrestamo")
+.classList.remove("hidden");
+
+
+const deuda=
+Number(prestamoActual.capital)+
+Number(prestamoActual.interes);
+
+
+const total=
+(prestamoActual.abonos||[])
+.reduce(
+(s,a)=>
+s+
+Number(a.valor),
+0
+);
+
+
+const saldo=
+deuda-total;
 
 
 document.getElementById(
 "capital"
 ).textContent=
-money(clienteActual.capital);
+money(
+prestamoActual.capital
+);
 
 
 document.getElementById(
 "interes"
 ).textContent=
-money(clienteActual.interes);
+money(
+prestamoActual.interes
+);
 
 
 document.getElementById(
@@ -926,11 +1328,18 @@ money(total);
 document.getElementById(
 "saldo"
 ).textContent=
-money(Math.max(saldo,0));
+money(
+Math.max(
+saldo,
+0
+)
+);
 
 
 const estado=
-document.getElementById("estado");
+document.getElementById(
+"estado"
+);
 
 
 if(saldo===0){
@@ -938,8 +1347,11 @@ if(saldo===0){
 estado.innerHTML=
 `
 <div class="ok">
-✅ DEUDA CANCELADA<br>
+
+✅ DEUDA CANCELADA
+<br>
 Saldo pendiente: $0
+
 </div>
 `;
 
@@ -950,8 +1362,10 @@ else if(saldo<0){
 estado.innerHTML=
 `
 <div class="warn">
+
 ⚠️ Hay un excedente de
 ${money(-saldo)}
+
 </div>
 `;
 
@@ -976,14 +1390,22 @@ renderHistorial();
 function renderHistorial(){
 
 const tabla=
-document.getElementById("tabla");
+document.getElementById(
+"tabla"
+);
 
-if(!clienteActual.abonos.length){
+const abonos=
+prestamoActual?.abonos||[];
+
+
+if(!abonos.length){
 
 tabla.innerHTML=
 `
 <div class="small">
+
 Aún no hay abonos registrados.
+
 </div>
 `;
 
@@ -995,14 +1417,15 @@ return;
 let acum=0;
 
 
-const abonosOrdenados=[
-...clienteActual.abonos
-].sort(
-(a,b)=>a.fecha.localeCompare(b.fecha)
+const ordenados=
+[...abonos].sort(
+(a,b)=>
+a.fecha.localeCompare(b.fecha)
 );
 
 
-let rows=abonosOrdenados.map(a=>{
+const rows=
+ordenados.map(a=>{
 
 const valor=
 Number(a.valor);
@@ -1011,7 +1434,16 @@ acum+=valor;
 
 
 const indice=
-clienteActual.abonos.indexOf(a);
+abonos.indexOf(a);
+
+
+const deuda=
+Number(
+prestamoActual.capital
+)+
+Number(
+prestamoActual.interes
+);
 
 
 return `
@@ -1032,9 +1464,7 @@ ${money(acum)}
 <td>
 ${money(
 Math.max(
-Number(clienteActual.capital)+
-Number(clienteActual.interes)-
-acum,
+deuda-acum,
 0
 )
 )}
@@ -1044,7 +1474,7 @@ acum,
 
 <button
 class="delete"
-onclick="eliminar(${indice})"
+onclick="eliminarAbono(${indice})"
 >
 🗑️
 </button>
@@ -1057,8 +1487,8 @@ onclick="eliminar(${indice})"
 }).join("");
 
 
-tabla.innerHTML=`
-
+tabla.innerHTML=
+`
 <table>
 
 <thead>
@@ -1086,7 +1516,6 @@ ${rows}
 </tbody>
 
 </table>
-
 `;
 
 }
@@ -1098,7 +1527,7 @@ ${rows}
 
 function registrar(){
 
-if(!clienteActual)
+if(!prestamoActual)
 return;
 
 
@@ -1108,14 +1537,19 @@ document.getElementById(
 ).value;
 
 
-const valor=Number(
+const valor=
+Number(
 document.getElementById(
 "valor"
 ).value
 );
 
 
-if(!fecha || !valor || valor<=0){
+if(
+!fecha||
+!valor||
+valor<=0
+){
 
 alert(
 "Ingresa una fecha y un valor válido."
@@ -1127,43 +1561,44 @@ return;
 
 
 const deuda=
-Number(clienteActual.capital)+
-Number(clienteActual.interes);
-
-
-const total=
-clienteActual.abonos.reduce(
-(s,a)=>s+Number(a.valor),0
+Number(
+prestamoActual.capital
+)+
+Number(
+prestamoActual.interes
 );
 
 
-if(total+valor>deuda){
-
-const excedente=
-total+valor-deuda;
+const total=
+(prestamoActual.abonos||[])
+.reduce(
+(s,a)=>
+s+
+Number(a.valor),
+0
+);
 
 
 if(
+total+valor>deuda
+&&
 !confirm(
-`Este abono genera un excedente de ${money(excedente)}. ¿Deseas registrarlo?`
+`Este abono genera un excedente de ${money(total+valor-deuda)}. ¿Deseas registrarlo?`
 )
 )
+
 return;
 
-}
 
-
-clienteActual.abonos.push({
-
+prestamoActual.abonos.push({
 fecha,
-
 valor
-
 });
 
 
-clienteActual.abonos.sort(
-(a,b)=>a.fecha.localeCompare(b.fecha)
+prestamoActual.abonos.sort(
+(a,b)=>
+a.fecha.localeCompare(b.fecha)
 );
 
 
@@ -1175,7 +1610,9 @@ document.getElementById(
 ).value="";
 
 
-renderCliente();
+renderPrestamo();
+
+renderListaPrestamos();
 
 }
 
@@ -1184,36 +1621,30 @@ renderCliente();
    ELIMINAR ABONO
 ===================================== */
 
-function eliminar(indice){
+function eliminarAbono(indice){
 
-if(!clienteActual)
+if(!prestamoActual)
 return;
 
 
-const abono=
-clienteActual.abonos[indice];
+const a=
+prestamoActual.abonos[indice];
 
 
-if(!abono)
+if(!a)
 return;
 
 
-const confirmar=confirm(
+if(
+!confirm(
+`¿Deseas eliminar este abono de ${money(a.valor)} realizado el ${formatDate(a.fecha)}?`
+)
+)
 
-`¿Deseas eliminar este abono de ${money(
-Number(abono.valor)
-)} realizado el ${formatDate(
-abono.fecha
-)}?`
-
-);
-
-
-if(!confirmar)
 return;
 
 
-clienteActual.abonos.splice(
+prestamoActual.abonos.splice(
 indice,
 1
 );
@@ -1221,15 +1652,194 @@ indice,
 
 guardarClientes();
 
+renderPrestamo();
+
+renderListaPrestamos();
+
+}
+
+
+/* =====================================
+   NUEVO PRÉSTAMO
+===================================== */
+
+function mostrarNuevoPrestamo(){
+
+if(!clienteActual)
+return;
+
+
+ocultarTodo();
+
+
+document
+.getElementById(
+"pantallaNuevoPrestamo"
+)
+.classList.remove("hidden");
+
+
+document.getElementById(
+"clientePrestamoNombre"
+).textContent=
+"👤 "+clienteActual.nombre;
+
+
+document.getElementById(
+"nuevoCapital"
+).value="";
+
+
+document.getElementById(
+"nuevoInteres"
+).value="";
+
+
+actualizarDeudaNueva();
+
+}
+
+
+function actualizarDeudaNueva(){
+
+const capital=
+Number(
+document.getElementById(
+"nuevoCapital"
+).value
+)||0;
+
+
+const interes=
+Number(
+document.getElementById(
+"nuevoInteres"
+).value
+)||0;
+
+
+document.getElementById(
+"nuevaDeuda"
+).textContent=
+money(
+capital+interes
+);
+
+}
+
+
+function crearPrestamo(){
+
+if(!clienteActual)
+return;
+
+
+const capital=
+Number(
+document.getElementById(
+"nuevoCapital"
+).value
+);
+
+
+const interes=
+Number(
+document.getElementById(
+"nuevoInteres"
+).value
+);
+
+
+if(
+!capital||
+capital<=0
+){
+
+alert(
+"⚠️ El capital debe ser mayor que cero."
+);
+
+return;
+
+}
+
+
+if(interes<0){
+
+alert(
+"⚠️ El interés no puede ser negativo."
+);
+
+return;
+
+}
+
+
+const p={
+
+id:Date.now()+Math.random(),
+
+capital,
+
+interes,
+
+abonos:[]
+
+};
+
+
+if(
+!Array.isArray(
+clienteActual.prestamos
+)
+)
+
+clienteActual.prestamos=[];
+
+
+clienteActual.prestamos.push(p);
+
+guardarClientes();
+
+
+prestamoActual=p;
+
+
+ocultarTodo();
+
+
+document
+.getElementById(
+"pantallaCliente"
+)
+.classList.remove("hidden");
+
+
+renderCliente();
+
+
+alert(
+"✅ Préstamo creado correctamente."
+);
+
+}
+
+
+function cancelarNuevoPrestamo(){
+
+ocultarTodo();
+
+document
+.getElementById(
+"pantallaCliente"
+)
+.classList.remove("hidden");
 
 renderCliente();
 
 }
 
 
-/* =====================================
-   INICIO
-===================================== */
 /* =====================================
    EDITAR CLIENTE
 ===================================== */
@@ -1239,166 +1849,134 @@ function editarCliente(){
 if(!clienteActual)
 return;
 
-document.getElementById("pantallaCliente")
-.classList.add("hidden");
 
-document.getElementById("pantallaEditarCliente")
+ocultarTodo();
+
+
+document
+.getElementById(
+"pantallaEditarCliente"
+)
 .classList.remove("hidden");
 
-document.getElementById("editarNombre")
-.value=clienteActual.nombre||"";
 
-document.getElementById("editarIdentificacion")
-.value=clienteActual.identificacion||"";
+document.getElementById(
+"editarNombre"
+).value=
+clienteActual.nombre||"";
 
-document.getElementById("editarTelefono")
-.value=clienteActual.telefono||"";
 
-document.getElementById("editarDireccion")
-.value=clienteActual.direccion||"";
-     
-document.getElementById("editarCapital")
-.value=clienteActual.capital;
+document.getElementById(
+"editarIdentificacion"
+).value=
+clienteActual.identificacion||"";
 
-document.getElementById("editarInteres")
-.value=clienteActual.interes;
 
-actualizarDeudaEdicion();
+document.getElementById(
+"editarTelefono"
+).value=
+clienteActual.telefono||"";
 
-}
 
-function actualizarDeudaEdicion(){
-
-const capital=Number(
-document.getElementById("editarCapital").value
-)||0;
-
-const interes=Number(
-document.getElementById("editarInteres").value
-)||0;
-
-document.getElementById("editarDeuda")
-.textContent=money(capital+interes);
+document.getElementById(
+"editarDireccion"
+).value=
+clienteActual.direccion||"";
 
 }
+
 
 function guardarCambiosCliente(){
 
 if(!clienteActual)
 return;
 
+
 const nombre=
-document.getElementById("editarNombre")
-.value.trim();
+document.getElementById(
+"editarNombre"
+).value.trim();
+
 
 const identificacion=
-document.getElementById("editarIdentificacion")
-.value.trim();
+document.getElementById(
+"editarIdentificacion"
+).value.trim();
+
 
 const telefono=
-document.getElementById("editarTelefono")
-.value.trim();
+document.getElementById(
+"editarTelefono"
+).value.trim();
+
 
 const direccion=
-document.getElementById("editarDireccion")
-.value.trim();
+document.getElementById(
+"editarDireccion"
+).value.trim();
 
-const capital=Number(
-document.getElementById("editarCapital").value
-);
-
-const interes=Number(
-document.getElementById("editarInteres").value
-);
 
 if(!nombre){
 
-alert("⚠️ El nombre no puede estar vacío.");
-
-return;
-
-}
-
-if(!capital||capital<=0){
-
-alert("⚠️ El capital debe ser mayor que cero.");
-
-return;
-
-}
-
-if(interes<0){
-
-alert("⚠️ El interés no puede ser negativo.");
-
-return;
-
-}
-
-const deudaNueva=capital+interes;
-
-const totalAbonado=
-clienteActual.abonos.reduce(
-(s,a)=>s+Number(a.valor),0
-);
-
-if(deudaNueva<totalAbonado){
-
 alert(
-"⚠️ La nueva deuda no puede ser menor que el total ya abonado.\n\n"+
-"Total abonado: "+money(totalAbonado)
+"⚠️ El nombre no puede estar vacío."
 );
 
 return;
 
 }
+
 
 clienteActual.nombre=nombre;
 
-clienteActual.identificacion=identificacion;
+clienteActual.identificacion=
+identificacion;
 
-clienteActual.telefono=telefono;
+clienteActual.telefono=
+telefono;
 
-clienteActual.capital=capital;
+clienteActual.direccion=
+direccion;
 
-clienteActual.telefono=telefono;
-
-clienteActual.direccion=direccion;
-
-clienteActual.capital=capital;
-
-clienteActual.interes=interes;
 
 guardarClientes();
 
-document.getElementById(
-"pantallaEditarCliente"
-).classList.add("hidden");
 
-document.getElementById(
+ocultarTodo();
+
+
+document
+.getElementById(
 "pantallaCliente"
-).classList.remove("hidden");
+)
+.classList.remove("hidden");
+
 
 renderCliente();
 
+
 alert(
-"✅ Datos guardados exitosamente.\n\n"+
-"Los datos del cliente fueron actualizados correctamente."
+"✅ Datos guardados exitosamente."
 );
 
 }
 
+
 function cancelarEdicion(){
 
-document.getElementById(
-"pantallaEditarCliente"
-).classList.add("hidden");
+ocultarTodo();
 
-document.getElementById(
+document
+.getElementById(
 "pantallaCliente"
-).classList.remove("hidden");
+)
+.classList.remove("hidden");
+
+renderCliente();
 
 }
+
+
 /* =====================================
    ELIMINAR CLIENTE
 ===================================== */
@@ -1408,52 +1986,89 @@ function eliminarCliente(){
 if(!clienteActual)
 return;
 
-const totalAbonado=clienteActual.abonos.reduce(
-(s,a)=>s+Number(a.valor),
+
+const ps=
+clienteActual.prestamos||[];
+
+
+const deuda=
+ps.reduce(
+(s,p)=>
+s+
+Number(p.capital)+
+Number(p.interes),
 0
 );
 
-const deuda=
-Number(clienteActual.capital)+
-Number(clienteActual.interes);
 
-const saldo=deuda-totalAbonado;
-
-const confirmar=confirm(
-`¿Estás seguro de eliminar a ${clienteActual.nombre}?\n\n`+
-`Deuda total: ${money(deuda)}\n`+
-`Total abonado: ${money(totalAbonado)}\n`+
-`Saldo pendiente: ${money(Math.max(saldo,0))}\n\n`+
-`⚠️ También se eliminará todo su historial de abonos.`
+const abonado=
+ps.reduce(
+(s,p)=>
+s+
+(p.abonos||[])
+.reduce(
+(x,a)=>
+x+
+Number(a.valor),
+0
+),
+0
 );
 
-if(!confirmar)
+
+const saldo=
+Math.max(
+deuda-abonado,
+0
+);
+
+
+if(
+!confirm(
+`¿Estás seguro de eliminar a ${clienteActual.nombre}?\n\n`+
+`Préstamos: ${ps.length}\n`+
+`Deuda total: ${money(deuda)}\n`+
+`Total abonado: ${money(abonado)}\n`+
+`Saldo pendiente: ${money(saldo)}\n\n`+
+`⚠️ También se eliminarán sus préstamos e historial de abonos.`
+)
+)
+
 return;
 
-clientes=clientes.filter(
-c=>c.id!==clienteActual.id
+
+clientes=
+clientes.filter(
+c=>
+c.id!==clienteActual.id
 );
+
 
 guardarClientes();
 
+
 clienteActual=null;
 
-document.getElementById(
-"pantallaCliente"
-).classList.add("hidden");
+prestamoActual=null;
 
-document.getElementById(
-"formularioCliente"
-).classList.add("hidden");
 
-document.getElementById(
+ocultarTodo();
+
+
+document
+.getElementById(
 "pantallaClientes"
-).classList.remove("hidden");
+)
+.classList.remove("hidden");
+
 
 renderClientes();
 
 }
-migrarDatosAntiguos();
+
+
+migrarDatos();
+
 
 document.getElementById(
 "fecha"
@@ -1462,10 +2077,10 @@ new Date()
 .toISOString()
 .slice(0,10);
 
+
 renderClientes();
 
 </script>
 
 </body>
-
 </html>
