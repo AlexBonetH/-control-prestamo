@@ -258,7 +258,13 @@ id="nuevoTelefono"
 type="tel"
 placeholder="Opcional"
 >
+<label class="small">Dirección</label>
 
+<input
+id="nuevoDireccion"
+type="text"
+placeholder="Opcional"
+>
 <h3>💰 Información del préstamo</h3>
 
 <label class="small">Capital prestado</label>
@@ -432,6 +438,14 @@ placeholder="Número de identificación"
 id="editarTelefono"
 type="tel"
 placeholder="Teléfono"
+>
+
+<label class="small">Dirección</label>
+
+<input
+id="editarDireccion"
+type="text"
+placeholder="Dirección"
 >
 
 <label class="small">Capital prestado</label>
@@ -699,6 +713,11 @@ document.getElementById(
 "nuevoTelefono"
 ).value.trim();
 
+const direccion=
+document.getElementById(
+"nuevoDireccion"
+).value.trim();
+     
 const capital=Number(
 document.getElementById(
 "nuevoCapital"
@@ -747,13 +766,15 @@ identificacion,
 
 telefono,
 
+direccion,
+
 capital,
 
 interes,
 
 abonos:[]
-
 };
+     
 
 
 clientes.push(cliente);
@@ -771,6 +792,10 @@ document.getElementById(
 
 document.getElementById(
 "nuevoTelefono"
+).value="";
+
+document.getElementById(
+"nuevoDireccion"
 ).value="";
 
 document.getElementById(
@@ -849,6 +874,11 @@ datos.push(
 "📱 "+clienteActual.telefono
 );
 
+if(clienteActual.direccion)
+datos.push(
+"📍 "+clienteActual.direccion
+);
+     
 document.getElementById(
 "datosCliente"
 ).textContent=
@@ -1224,6 +1254,9 @@ document.getElementById("editarIdentificacion")
 document.getElementById("editarTelefono")
 .value=clienteActual.telefono||"";
 
+document.getElementById("editarDireccion")
+.value=clienteActual.direccion||"";
+     
 document.getElementById("editarCapital")
 .value=clienteActual.capital;
 
@@ -1264,6 +1297,10 @@ document.getElementById("editarIdentificacion")
 
 const telefono=
 document.getElementById("editarTelefono")
+.value.trim();
+
+const direccion=
+document.getElementById("editarDireccion")
 .value.trim();
 
 const capital=Number(
@@ -1321,6 +1358,12 @@ clienteActual.nombre=nombre;
 clienteActual.identificacion=identificacion;
 
 clienteActual.telefono=telefono;
+
+clienteActual.capital=capital;
+
+clienteActual.telefono=telefono;
+
+clienteActual.direccion=direccion;
 
 clienteActual.capital=capital;
 
