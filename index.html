@@ -216,6 +216,19 @@ id="interes"
 <div class="row">
 
 <span class="label">
+💵 Interés calculado
+</span>
+
+<span
+class="value"
+id="interesCalculado"
+></span>
+
+</div>
+
+<div class="row">
+
+<span class="label">
 🧾 Deuda total
 </span>
 
@@ -347,17 +360,34 @@ oninput="actualizarDeudaNueva()"
 >
 
 <label class="small">
-Interés acordado
+Interés acordado (%)
 </label>
 
 <input
 id="nuevoInteres"
 type="number"
-inputmode="numeric"
+inputmode="decimal"
 min="0"
-placeholder="Ej. 400000"
+max="1000"
+step="0.01"
+placeholder="Ej. 20"
 oninput="actualizarDeudaNueva()"
 >
+
+<div class="row">
+
+<span class="label">
+💵 Interés calculado
+</span>
+
+<span
+class="value"
+id="nuevoInteresCalculado"
+>
+$0
+</span>
+
+</div>
 
 <div class="row">
 
