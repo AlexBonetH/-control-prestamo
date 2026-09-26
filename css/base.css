@@ -180,3 +180,19 @@ border-bottom:1px solid #eee
 th{
 color:#6b7280
 }
+
+.campo-error{
+border:2px solid #dc2626 !important;
+background:#fff7f7;
+}
+
+.mensaje-error{
+color:#dc2626;
+font-size:13px;
+font-weight:600;
+margin:-5px 0 10px;
+}
+
+.input-ok{
+border-color:#16a34a !important;
+}
