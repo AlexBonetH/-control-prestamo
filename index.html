@@ -356,8 +356,18 @@ type="number"
 inputmode="numeric"
 min="1"
 placeholder="Ej. 2000000"
-oninput="actualizarDeudaNueva()"
+oninput="limpiarError('nuevoCapital'); actualizarDeudaNueva()"
 >
+
+<div
+id="nuevoCapitalError"
+class="mensaje-error"
+></div>
+
+<div
+id="nuevoCapitalError"
+class="mensaje-error"
+></div>
 
 <label class="small">
 Interés acordado (%)
@@ -371,8 +381,13 @@ min="0"
 max="1000"
 step="0.01"
 placeholder="Ej. 20"
-oninput="actualizarDeudaNueva()"
+oninput="limpiarError('nuevoInteres'); actualizarDeudaNueva()"
 >
+
+<div
+id="nuevoInteresError"
+class="mensaje-error"
+></div>
 
 <div class="row">
 
@@ -412,6 +427,116 @@ $0
 
 </div>
 
+
+
+<!-- ========================= -->
+<!-- EDITAR PRÉSTAMO -->
+<!-- ========================= -->
+
+<div
+id="pantallaEditarPrestamo"
+class="card hidden"
+>
+
+<button
+class="secondary back"
+onclick="cancelarEdicionPrestamo()"
+>
+← Volver al cliente
+</button>
+
+<h3>
+✏️ Editar préstamo
+</h3>
+
+<div
+class="small"
+id="editarPrestamoNombre"
+></div>
+
+<label class="small">
+Capital prestado
+</label>
+
+<input
+id="editarCapital"
+type="number"
+inputmode="numeric"
+min="1"
+placeholder="Ej. 2000000"
+oninput="limpiarError('editarCapital'); actualizarDeudaEditar()"
+>
+
+<div
+id="editarCapitalError"
+class="mensaje-error"
+></div>
+
+<label class="small">
+Interés acordado (%)
+</label>
+
+<input
+id="editarInteres"
+type="number"
+inputmode="decimal"
+min="0"
+max="1000"
+step="0.01"
+placeholder="Ej. 20"
+oninput="limpiarError('editarInteres'); actualizarDeudaEditar()"
+>
+
+<div
+id="editarInteresError"
+class="mensaje-error"
+></div>
+
+<div class="row">
+
+<span class="label">
+💵 Interés calculado
+</span>
+
+<span
+class="value"
+id="editarInteresCalculado"
+>
+$0
+</span>
+
+</div>
+
+<div class="row">
+
+<span class="label">
+🧾 Deuda total
+</span>
+
+<span
+class="value"
+id="editarDeuda"
+>
+$0
+</span>
+
+</div>
+
+<button
+onclick="guardarCambiosPrestamo()"
+style="background:#16a34a"
+>
+💾 Guardar cambios
+</button>
+
+<button
+class="secondary"
+onclick="cancelarEdicionPrestamo()"
+>
+↩️ Cancelar
+</button>
+
+</div>
 
 <!-- ========================= -->
 <!-- EDITAR CLIENTE -->
