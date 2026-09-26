@@ -5,13 +5,15 @@ function ocultarTodo(){
 "formularioCliente",
 "pantallaCliente",
 "pantallaNuevoPrestamo",
+"pantallaEditarPrestamo",
 "pantallaEditarCliente"
 ]
 .forEach(id=>{
 
-document
-.getElementById(id)
-.classList.add("hidden");
+const elemento=document.getElementById(id);
+
+if(elemento)
+elemento.classList.add("hidden");
 
 });
 
