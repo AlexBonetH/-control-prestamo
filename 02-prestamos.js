@@ -81,6 +81,13 @@ style="background:#2563eb"
 ✏️ Editar préstamo
 </button>
 
+<button
+onclick="eliminarPrestamo(${p.id})"
+style="background:#dc2626"
+>
+🗑️ Eliminar préstamo
+</button>
+
 </div>
 `;
 
@@ -821,6 +828,66 @@ document
 "pantallaCliente"
 )
 .classList.remove("hidden");
+
+renderCliente();
+
+}
+
+
+function eliminarPrestamo(id){
+
+if(!clienteActual)
+return;
+
+
+const prestamo=
+(clienteActual.prestamos||[])
+.find(
+p=>p.id===id
+);
+
+if(!prestamo)
+return;
+
+
+const total=
+(prestamo.abonos||[])
+.reduce(
+(s,a)=>
+s+
+Number(a.valor||0),
+0
+);
+
+
+if(
+!confirm(
+`¿Eliminar este préstamo?\n\n`+
+`Capital: ${money(prestamo.capital)}\n`+
+`Total abonado: ${money(total)}\n\n`+
+`⚠️ Se eliminará junto con todo su historial de abonos.`
+)
+)
+
+return;
+
+
+clienteActual.prestamos=
+clienteActual.prestamos.filter(
+p=>p.id!==id
+);
+
+
+if(
+prestamoActual&&
+prestamoActual.id===id
+)
+
+prestamoActual=null;
+
+
+guardarClientes();
+
 
 renderCliente();
 
