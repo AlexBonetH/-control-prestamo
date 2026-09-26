@@ -56,7 +56,11 @@ Préstamo ${i+1}
 
 Capital: ${money(p.capital)}
 •
-Interés: ${money(p.interes)}
+${
+p.interesPorcentaje != null
+? `Interés: ${Number(p.interesPorcentaje).toLocaleString("es-CO")} % (${money(p.interes)})`
+: `Interés: ${money(p.interes)}`
+}
 
 </div>
 
@@ -140,6 +144,14 @@ prestamoActual.capital
 
 document.getElementById(
 "interes"
+).textContent=
+prestamoActual.interesPorcentaje != null
+? `${Number(prestamoActual.interesPorcentaje).toLocaleString("es-CO")} %`
+: money(prestamoActual.interes);
+
+
+document.getElementById(
+"interesCalculado"
 ).textContent=
 money(
 prestamoActual.interes
@@ -247,6 +259,11 @@ document.getElementById(
 ).value="";
 
 
+document.getElementById(
+"nuevoInteresCalculado"
+).textContent="$0";
+
+
 actualizarDeudaNueva();
 
 }
@@ -261,12 +278,20 @@ document.getElementById(
 )||0;
 
 
-const interes=
+const porcentaje=
 Number(
 document.getElementById(
 "nuevoInteres"
 ).value
 )||0;
+
+const interes=capital*porcentaje/100;
+
+
+document.getElementById(
+"nuevoInteresCalculado"
+).textContent=
+money(interes);
 
 
 document.getElementById(
@@ -292,12 +317,15 @@ document.getElementById(
 );
 
 
-const interes=
+const interesPorcentaje=
 Number(
 document.getElementById(
 "nuevoInteres"
 ).value
 );
+
+const interes=
+capital*interesPorcentaje/100;
 
 
 if(
@@ -314,10 +342,14 @@ return;
 }
 
 
-if(interes<0){
+if(
+!Number.isFinite(interesPorcentaje)||
+interesPorcentaje<0||
+interesPorcentaje>1000
+){
 
 alert(
-"⚠️ El interés no puede ser negativo."
+"⚠️ Ingresa un porcentaje de interés válido entre 0% y 1000%."
 );
 
 return;
@@ -330,6 +362,8 @@ const p={
 id:Date.now()+Math.random(),
 
 capital,
+
+interesPorcentaje,
 
 interes,
 
