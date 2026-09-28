@@ -27,14 +27,14 @@ cont.innerHTML=
 ps.map((p,i)=>{
 
 const deuda=
-Number(p.capital)+
-Number(p.interes);
+Number(p.capital||0)+
+Number(p.interes||0);
 
 const total=
 (p.abonos||[]).reduce(
 (s,a)=>
 s+
-Number(a.valor),
+Number(a.valor||0),
 0
 );
 
@@ -44,6 +44,10 @@ deuda-total,
 0
 );
 
+const interesTexto=
+p.interesPorcentaje != null
+? `Interés: ${Number(p.interesPorcentaje).toLocaleString("es-CO")} % (${money(p.interes)})`
+: `Interés: ${money(p.interes)}`;
 
 return `
 <div class="loan-card">
@@ -53,23 +57,15 @@ Préstamo ${i+1}
 </strong>
 
 <div class="small">
-
 Capital: ${money(p.capital)}
 •
-${
-p.interesPorcentaje != null
-? `Interés: ${Number(p.interesPorcentaje).toLocaleString("es-CO")} % (${money(p.interes)})`
-: `Interés: ${money(p.interes)}`
-}
-
+${interesTexto}
 </div>
 
 <div
 style="margin-top:6px;font-weight:800"
 >
-
 💵 Saldo: ${money(saldo)}
-
 </div>
 
 <button
@@ -78,12 +74,27 @@ onclick="seleccionarPrestamo(${p.id})"
 Ver préstamo
 </button>
 
+<button
+onclick="editarPrestamo(${p.id})"
+style="background:#2563eb"
+>
+✏️ Editar préstamo
+</button>
+
+<button
+onclick="eliminarPrestamo(${p.id})"
+style="background:#dc2626"
+>
+🗑️ Eliminar préstamo
+</button>
+
 </div>
 `;
 
 }).join("");
 
 }
+
 
 function seleccionarPrestamo(id){
 
@@ -104,6 +115,7 @@ renderPrestamo();
 
 }
 
+
 function renderPrestamo(){
 
 if(!prestamoActual)
@@ -116,8 +128,8 @@ document
 
 
 const deuda=
-Number(prestamoActual.capital)+
-Number(prestamoActual.interes);
+Number(prestamoActual.capital||0)+
+Number(prestamoActual.interes||0);
 
 
 const total=
@@ -125,7 +137,7 @@ const total=
 .reduce(
 (s,a)=>
 s+
-Number(a.valor),
+Number(a.valor||0),
 0
 );
 
@@ -150,12 +162,12 @@ prestamoActual.interesPorcentaje != null
 : money(prestamoActual.interes);
 
 
-document.getElementById(
-"interesCalculado"
-).textContent=
-money(
-prestamoActual.interes
-);
+const interesCalculado=
+document.getElementById("interesCalculado");
+
+if(interesCalculado)
+interesCalculado.textContent=
+money(prestamoActual.interes);
 
 
 document.getElementById(
@@ -201,7 +213,6 @@ Saldo pendiente: $0
 `;
 
 }
-
 else if(saldo<0){
 
 estado.innerHTML=
@@ -215,26 +226,23 @@ ${money(-saldo)}
 `;
 
 }
-
 else{
 
 estado.innerHTML="";
 
 }
 
-
 renderHistorial();
 
 }
+
 
 function mostrarNuevoPrestamo(){
 
 if(!clienteActual)
 return;
 
-
 ocultarTodo();
-
 
 document
 .getElementById(
@@ -259,14 +267,12 @@ document.getElementById(
 ).value="";
 
 
-document.getElementById(
-"nuevoInteresCalculado"
-).textContent="$0";
-
+limpiarErroresPrestamo();
 
 actualizarDeudaNueva();
 
 }
+
 
 function actualizarDeudaNueva(){
 
@@ -277,7 +283,6 @@ document.getElementById(
 ).value
 )||0;
 
-
 const porcentaje=
 Number(
 document.getElementById(
@@ -285,7 +290,8 @@ document.getElementById(
 ).value
 )||0;
 
-const interes=capital*porcentaje/100;
+const interes=
+capital*porcentaje/100;
 
 
 document.getElementById(
@@ -303,10 +309,152 @@ capital+interes
 
 }
 
+
+function limpiarError(id){
+
+const campo=document.getElementById(id);
+const mensaje=document.getElementById(id+"Error");
+
+if(campo)
+campo.classList.remove("campo-error");
+
+if(mensaje)
+mensaje.textContent="";
+
+}
+
+
+function mostrarError(id,mensaje){
+
+const campo=document.getElementById(id);
+const contenedor=document.getElementById(id+"Error");
+
+if(campo)
+campo.classList.add("campo-error");
+
+if(contenedor)
+contenedor.textContent="⚠️ "+mensaje;
+
+}
+
+
+function limpiarErroresPrestamo(){
+
+[
+"nuevoCapital",
+"nuevoInteres",
+"editarCapital",
+"editarInteres"
+]
+.forEach(limpiarError);
+
+}
+
+
+function validarNuevoPrestamo(){
+
+let valido=true;
+
+const capitalInput=
+document.getElementById("nuevoCapital");
+
+const interesInput=
+document.getElementById("nuevoInteres");
+
+
+limpiarError("nuevoCapital");
+limpiarError("nuevoInteres");
+
+
+if(
+!capitalInput.value.trim()
+){
+
+mostrarError(
+"nuevoCapital",
+"El capital es obligatorio."
+);
+
+valido=false;
+
+}
+else{
+
+const capital=Number(capitalInput.value);
+
+if(!Number.isFinite(capital)||capital<=0){
+
+mostrarError(
+"nuevoCapital",
+"Ingresa un capital mayor que cero."
+);
+
+valido=false;
+
+}
+
+}
+
+
+if(
+!interesInput.value.trim()
+){
+
+mostrarError(
+"nuevoInteres",
+"El porcentaje de interés es obligatorio."
+);
+
+valido=false;
+
+}
+else{
+
+const porcentaje=
+Number(interesInput.value);
+
+if(
+!Number.isFinite(porcentaje)||
+porcentaje<0||
+porcentaje>1000
+){
+
+mostrarError(
+"nuevoInteres",
+"Ingresa un porcentaje entre 0% y 1000%."
+);
+
+valido=false;
+
+}
+
+}
+
+
+return valido;
+
+}
+
+
 function crearPrestamo(){
 
 if(!clienteActual)
 return;
+
+
+if(!validarNuevoPrestamo()){
+
+const primerError=
+document.querySelector(
+"#pantallaNuevoPrestamo .campo-error"
+);
+
+if(primerError)
+primerError.focus();
+
+return;
+
+}
 
 
 const capital=
@@ -315,7 +463,6 @@ document.getElementById(
 "nuevoCapital"
 ).value
 );
-
 
 const interesPorcentaje=
 Number(
@@ -326,35 +473,6 @@ document.getElementById(
 
 const interes=
 capital*interesPorcentaje/100;
-
-
-if(
-!capital||
-capital<=0
-){
-
-alert(
-"⚠️ El capital debe ser mayor que cero."
-);
-
-return;
-
-}
-
-
-if(
-!Number.isFinite(interesPorcentaje)||
-interesPorcentaje<0||
-interesPorcentaje>1000
-){
-
-alert(
-"⚠️ Ingresa un porcentaje de interés válido entre 0% y 1000%."
-);
-
-return;
-
-}
 
 
 const p={
@@ -408,6 +526,7 @@ alert(
 
 }
 
+
 function cancelarNuevoPrestamo(){
 
 ocultarTodo();
@@ -417,6 +536,358 @@ document
 "pantallaCliente"
 )
 .classList.remove("hidden");
+
+renderCliente();
+
+}
+
+
+function editarPrestamo(id){
+
+if(!clienteActual)
+return;
+
+
+const prestamo=
+(clienteActual.prestamos||[])
+.find(
+p=>p.id===id
+);
+
+if(!prestamo)
+return;
+
+
+prestamoActual=prestamo;
+
+
+ocultarTodo();
+
+
+document
+.getElementById(
+"pantallaEditarPrestamo"
+)
+.classList.remove("hidden");
+
+
+document.getElementById(
+"editarPrestamoNombre"
+).textContent=
+"👤 "+clienteActual.nombre;
+
+
+document.getElementById(
+"editarCapital"
+).value=
+prestamo.capital ?? "";
+
+
+let porcentaje=
+prestamo.interesPorcentaje;
+
+
+if(
+porcentaje==null&&
+Number(prestamo.capital)>0
+){
+
+porcentaje=
+Number(prestamo.interes||0)/
+Number(prestamo.capital)*
+100;
+
+}
+
+
+document.getElementById(
+"editarInteres"
+).value=
+porcentaje!=null
+? Number(porcentaje).toFixed(2).replace(/\.00$/,"")
+: "";
+
+
+limpiarErroresPrestamo();
+
+actualizarDeudaEditar();
+
+}
+
+
+function actualizarDeudaEditar(){
+
+const capital=
+Number(
+document.getElementById(
+"editarCapital"
+)?.value
+)||0;
+
+
+const porcentaje=
+Number(
+document.getElementById(
+"editarInteres"
+)?.value
+)||0;
+
+
+const interes=
+capital*porcentaje/100;
+
+
+const interesCalculado=
+document.getElementById(
+"editarInteresCalculado"
+);
+
+const deuda=
+document.getElementById(
+"editarDeuda"
+);
+
+
+if(interesCalculado)
+interesCalculado.textContent=
+money(interes);
+
+if(deuda)
+deuda.textContent=
+money(capital+interes);
+
+}
+
+
+function validarEditarPrestamo(){
+
+let valido=true;
+
+const capitalInput=
+document.getElementById("editarCapital");
+
+const interesInput=
+document.getElementById("editarInteres");
+
+
+limpiarError("editarCapital");
+limpiarError("editarInteres");
+
+
+if(
+!capitalInput.value.trim()
+){
+
+mostrarError(
+"editarCapital",
+"El capital es obligatorio."
+);
+
+valido=false;
+
+}
+else{
+
+const capital=
+Number(capitalInput.value);
+
+if(
+!Number.isFinite(capital)||
+capital<=0
+){
+
+mostrarError(
+"editarCapital",
+"Ingresa un capital mayor que cero."
+);
+
+valido=false;
+
+}
+
+}
+
+
+if(
+!interesInput.value.trim()
+){
+
+mostrarError(
+"editarInteres",
+"El porcentaje de interés es obligatorio."
+);
+
+valido=false;
+
+}
+else{
+
+const porcentaje=
+Number(interesInput.value);
+
+if(
+!Number.isFinite(porcentaje)||
+porcentaje<0||
+porcentaje>1000
+){
+
+mostrarError(
+"editarInteres",
+"Ingresa un porcentaje entre 0% y 1000%."
+);
+
+valido=false;
+
+}
+
+}
+
+
+return valido;
+
+}
+
+
+function guardarCambiosPrestamo(){
+
+if(!clienteActual||!prestamoActual)
+return;
+
+
+if(!validarEditarPrestamo()){
+
+const primerError=
+document.querySelector(
+"#pantallaEditarPrestamo .campo-error"
+);
+
+if(primerError)
+primerError.focus();
+
+return;
+
+}
+
+
+const capital=
+Number(
+document.getElementById(
+"editarCapital"
+).value
+);
+
+const interesPorcentaje=
+Number(
+document.getElementById(
+"editarInteres"
+).value
+);
+
+const interes=
+capital*interesPorcentaje/100;
+
+
+prestamoActual.capital=
+capital;
+
+prestamoActual.interesPorcentaje=
+interesPorcentaje;
+
+prestamoActual.interes=
+interes;
+
+
+guardarClientes();
+
+
+ocultarTodo();
+
+
+document
+.getElementById(
+"pantallaCliente"
+)
+.classList.remove("hidden");
+
+
+renderCliente();
+
+alert(
+"✅ Préstamo actualizado correctamente."
+);
+
+}
+
+
+function cancelarEdicionPrestamo(){
+
+ocultarTodo();
+
+document
+.getElementById(
+"pantallaCliente"
+)
+.classList.remove("hidden");
+
+renderCliente();
+
+}
+
+
+function eliminarPrestamo(id){
+
+if(!clienteActual)
+return;
+
+
+const prestamo=
+(clienteActual.prestamos||[])
+.find(
+p=>p.id===id
+);
+
+if(!prestamo)
+return;
+
+
+const total=
+(prestamo.abonos||[])
+.reduce(
+(s,a)=>
+s+
+Number(a.valor||0),
+0
+);
+
+
+if(
+!confirm(
+`¿Eliminar este préstamo?\n\n`+
+`Capital: ${money(prestamo.capital)}\n`+
+`Total abonado: ${money(total)}\n\n`+
+`⚠️ Se eliminará junto con todo su historial de abonos.`
+)
+)
+
+return;
+
+
+clienteActual.prestamos=
+clienteActual.prestamos.filter(
+p=>p.id!==id
+);
+
+
+if(
+prestamoActual&&
+prestamoActual.id===id
+)
+
+prestamoActual=null;
+
+
+guardarClientes();
+
 
 renderCliente();
 
